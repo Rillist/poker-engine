@@ -1,1 +1,1 @@
-module.exports = require('./lib/node-poker');
+module.exports = require('./lib/logic');

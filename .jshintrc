@@ -19,6 +19,7 @@
     "smarttabs": true,
     "globals"  : {
         "exports": false,
-        "module" : false
+        "module" : false,
+        "require": false
     }
 }
