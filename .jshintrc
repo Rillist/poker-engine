@@ -18,8 +18,8 @@
     "trailing" : true,
     "smarttabs": true,
     "globals"  : {
-        "exports": false,
         "module" : false,
+        "exports": false,
         "require": false
     }
 }
