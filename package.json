@@ -1,39 +1,39 @@
 {
-  "name": "node-poker",
-  "description": "A complete game engine for Texas Holdem poker",
-  "version": "0.0.3",
-  "homepage": "https://github.com/yannlombard/node-poker",
-  "keywords": [
-    "poker",
-    "texas",
-    "holdhem",
-    "tournament",
-    "cards"
-  ],
-  "author": "Yann Lombard",
-  "main": "index",
-  "files": [
-    "lib",
-    "index.js"
-  ],
-  "repository": "yannlombard/node-poker",
-  "engines": {
-    "node": "0.10.26",
-    "npm": ">=1.2.10"
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.8.0",
-    "grunt-conventional-changelog": "~1.1.0",
-    "grunt-release": "~0.6.0",
-    "load-grunt-tasks": "~0.3.0",
-    "semver": "~2.3.0",
-    "underscore.string": "~2.3.1"
-  },
-  "licenses": [
-    {
-      "type": "BSD"
-    }
-  ]
+    "name": "node-poker",
+    "description": "A complete game engine for Texas Holdem poker",
+    "version": "0.0.3",
+    "homepage": "https://github.com/yannlombard/node-poker",
+    "keywords": [
+        "poker",
+        "texas",
+        "holdhem",
+        "tournament",
+        "cards"
+    ],
+    "author": "Yann Lombard",
+    "main": "index",
+    "files": [
+        "lib",
+        "index.js"
+    ],
+    "repository": "yannlombard/node-poker",
+    "engines": {
+        "node": "0.10.26",
+        "npm": ">=1.2.10"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "grunt": "~0.4.1",
+        "grunt-contrib-jshint": "~0.8.0",
+        "grunt-conventional-changelog": "~1.1.0",
+        "grunt-release": "~0.6.0",
+        "load-grunt-tasks": "~0.3.0",
+        "semver": "~2.3.0",
+        "underscore.string": "~2.3.1"
+    },
+    "licenses": [
+        {
+            "type": "BSD"
+        }
+    ]
 }
