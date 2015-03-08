@@ -37,6 +37,13 @@ table.StartGame();
 ```js
 table.on("turn",function(player){
 	player.Call();
+	// or
+	// player.Bet(20)
+	// player.Fold()
+});
+
+table.on("win",function(player,prize){
+	// custom logic executed upon win
 });
 
 table.on("gameOver",function(){

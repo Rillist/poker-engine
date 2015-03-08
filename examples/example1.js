@@ -21,8 +21,6 @@ table.addPlayer({
 });
 
 
-
-
 table.on("turn",function(player){
 	player.Call();
 });
