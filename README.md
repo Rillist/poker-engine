@@ -1,7 +1,8 @@
+## Node-Poker
 Event based poker engine for node.
 
 
-Usage:
+## Usage:
 ```js
 var Poker = require("node-poker");
 
