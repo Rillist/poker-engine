@@ -19,6 +19,7 @@ var table = poker.getNew({
 	}
 ]); 
 
+
 /* DOESNT WORK
 	game.AddPlayer();
 */
@@ -29,8 +30,9 @@ table.on("turn",function(player){
 	player.Call();
 });
 
-
-table.on("gameOver",function(){table.initNewRound()});
+table.on("gameOver",function(){
+	table.initNewRound()
+});
 
 table.StartGame();
 

@@ -25,4 +25,16 @@ var table = Poker.newTable({
 		chips: 300
 	}
 ]); 
+table.StartGame();
+```
+
+##Event:
+```js
+table.on("turn",function(player){
+	player.Call();
+});
+
+table.on("gameOver",function(){
+	table.initNewRound()
+});
 ```
