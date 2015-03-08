@@ -33,7 +33,7 @@ table.addPlayer({
 table.StartGame();
 ```
 
-##Events:
+## Events:
 ```js
 table.on("turn",function(player){
 	player.Call();
