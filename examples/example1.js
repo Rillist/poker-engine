@@ -1,5 +1,5 @@
-var poker = require("./index");
-var table = poker.getNew({
+var poker = require("../index");
+var table = poker.newTable({
 	minBlind: 10,
 	maxBlind: 20,
 	maxPlayers : 6
@@ -7,22 +7,19 @@ var table = poker.getNew({
 	{
 		playerName : "johnnyboy",
 		chips: 100
-
 	},
 	{
 		playerName : "bobbyboy",
 		chips: 200
 	},
-	{
-		playerName : "robbyboy",
-		chips: 300
-	}
 ]); 
 
 
-/* DOESNT WORK
-	game.AddPlayer();
-*/
+table.addPlayer({
+	playerName : "robbyboy",
+	chips: 300
+});
+
 
 
 
@@ -34,9 +31,10 @@ table.on("gameOver",function(){
 	table.initNewRound()
 });
 
+
+
+
 table.StartGame();
-
-
 //console.log(table);
 
 
