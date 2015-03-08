@@ -28,7 +28,7 @@ var table = Poker.newTable({
 table.StartGame();
 ```
 
-##Event:
+##Events:
 ```js
 table.on("turn",function(player){
 	player.Call();
