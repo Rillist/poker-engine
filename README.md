@@ -1,3 +1,27 @@
-Intended to be a complete engine to execute a poker game for multiple players.
+Event based poker engine for node.
 
-Grunt publish to create a tag, bump up the version number, generate changelog & commit package.json and changelog update
+
+Usage:
+```js
+var Poker = require("node-poker");
+
+var table = Poker.newTable({
+	minBlind: 10,
+	maxBlind: 20,
+	maxPlayers : 6
+},[
+	{
+		playerName : "johnnyboy",
+		chips: 100
+
+	},
+	{
+		playerName : "bobbyboy",
+		chips: 200
+	},
+	{
+		playerName : "robbyboy",
+		chips: 300
+	}
+]); 
+```

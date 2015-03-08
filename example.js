@@ -20,7 +20,7 @@ var table = poker.getNew({
 ]); 
 
 /* DOESNT WORK
-game.AddPlayer();
+	game.AddPlayer();
 */
 
 
