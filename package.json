@@ -1,7 +1,7 @@
 {
   "name": "poker-engine",
   "description": "Event-based poker engine for node.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/romanzubenko/poker-engine",
   "keywords": [
     "poker",
@@ -24,9 +24,15 @@
     "node": ">=0.10.26",
     "npm": ">=1.2.10"
   },
+
   "dependencies": {
       "events" : "*"
   },
+
+  "devDependencies": {
+    "mocha": "*"
+  },
+
   "licenses": [
     {
       "type": "BSD"
