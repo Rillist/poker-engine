@@ -6,7 +6,7 @@ Event based poker engine for node.
 ```js
 var Poker = require("node-poker");
 
-// pass init parameters, and optional array of users
+// pass init parameters, and optional array of players to initialize a table
 var table = poker.newTable({
 	minBlind: 10,
 	maxBlind: 20,
@@ -22,13 +22,14 @@ var table = poker.newTable({
 	},
 ]); 
 
-// or add player when you need it
+// or add a player when you need it
 table.addPlayer({
 	playerName : "robbyboy",
 	chips: 300
 });
 
 
+// start a table!
 table.StartGame();
 ```
 
