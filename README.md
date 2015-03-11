@@ -6,7 +6,7 @@ Please note that the project is still early in development, and some changes can
 ## Installation
 
 ```bash
-$ npm install express
+$ npm install poker-engine
 ```
 
 ## Usage:
