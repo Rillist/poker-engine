@@ -1,10 +1,17 @@
 ## Node-Poker
 Event based poker engine for node.
 
+Please note that the project is still early in development, and some changes can be not backward compatible. 
+
+## Installation
+
+```bash
+$ npm install express
+```
 
 ## Usage:
 ```js
-var Poker = require("node-poker");
+var Poker = require("poker-engine");
 
 // pass init parameters, and optional array of players to initialize a table
 var table = poker.newTable({
@@ -54,3 +61,9 @@ table.on("gameOver",function(){
 });
 
 ```
+
+
+## Roadmap
+1. Tests in Mocha
+2. Player model to be extendable
+3. Comprehensive event docs
