@@ -22,7 +22,8 @@ table.addPlayer({
 
 
 table.on("turn",function(player){
-	player.Call();
+	console.log('turn')
+	player.call();
 });
 
 table.on("gameOver",function(){
@@ -32,7 +33,7 @@ table.on("gameOver",function(){
 
 
 
-table.StartGame();
+table.startGame();
 //console.log(table);
 
 

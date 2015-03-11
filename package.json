@@ -1,7 +1,7 @@
 {
   "name": "poker-engine",
   "description": "Event-based poker engine for node.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "https://github.com/romanzubenko/poker-engine",
   "keywords": [
     "poker",

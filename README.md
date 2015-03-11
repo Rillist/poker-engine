@@ -30,17 +30,20 @@ table.addPlayer({
 
 
 // start a table!
-table.StartGame();
+table.startGame();
 ```
 
 ## Events:
 ```js
 table.on("turn",function(player){
-	player.Call();
+	player.call();
 	// or
-	// player.Bet(20)
-	// player.Fold()
+	// player.bet(20)
+	// player.fold()
+	// player.allIn()
+	// player.check()
 });
+
 
 table.on("win",function(player,prize){
 	// custom logic executed upon win
@@ -49,4 +52,5 @@ table.on("win",function(player,prize){
 table.on("gameOver",function(){
 	table.initNewRound()
 });
+
 ```
