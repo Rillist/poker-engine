@@ -1,16 +1,14 @@
 {
   "name": "poker-engine",
   "description": "Event-based poker engine for node.",
-  "version": "0.0.5",
-  "homepage": "https://github.com/romanzubenko/poker-engine",
+  "version": "0.0.6",
+  "homepage": "https://github.com/Rillist/poker-engine",
   "keywords": [
     "poker",
     "texas",
-    "holdhem",
-    "tournament",
-    "cards"
+    "holdhem"
   ],
-  "author": "Roman Zubenko",
+  "author": "Chris Witt",
   "main": "index",
   "files": [
     "lib",
@@ -18,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/romanzubenko/poker-engine"
+    "url": "https://github.com/Rillist/poker-engine"
   },
   "engines": {
     "node": ">=0.10.26",
@@ -39,7 +37,7 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/romanzubenko/poker-engine/issues"
+    "url": "https://github.com/Rillist/poker-engine/issues"
   },
   "directories": {
     "example": "examples"
