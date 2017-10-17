@@ -1,33 +1,33 @@
-var poker = require("../index");
+var poker = require('../index');
 var table = poker.newTable({
 	minBlind: 10,
 	maxBlind: 20,
 	maxPlayers : 6
 },[
 	{
-		playerName : "johnnyboy",
+		playerName : 'johnnyboy',
 		chips: 100
 	},
 	{
-		playerName : "bobbyboy",
+		playerName : 'bobbyboy',
 		chips: 200
 	},
 ]); 
 
 
 table.addPlayer({
-	playerName : "robbyboy",
+	playerName : 'robbyboy',
 	chips: 300
 });
 
 
-table.on("turn",function(player){
-	console.log('turn')
+table.on('turn',function(player){
+	console.log('turn');
 	player.call();
 });
 
-table.on("gameOver",function(){
-	table.initNewRound()
+table.on('gameOver',function(){
+	table.initNewRound();
 });
 
 
