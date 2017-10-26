@@ -1,49 +1,38 @@
 {
   "name": "poker-engine",
-  "description": "Event-based poker engine for node.",
   "version": "0.0.6",
+  "author": "Chris Witt",
+  "license": "BSD",
+  "description": "Event-based poker engine for node.",
   "homepage": "https://github.com/Rillist/poker-engine",
   "keywords": [
     "poker",
     "texas",
     "holdem"
   ],
-  "author": "Chris Witt",
-  "main": "index",
-  "files": [
-    "lib",
-    "index.js"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Rillist/poker-engine"
+  },
+  "bugs": {
+    "url": "https://github.com/Rillist/poker-engine/issues"
   },
   "engines": {
     "node": ">=0.10.26",
     "npm": ">=1.2.10"
   },
-
-  "dependencies": {
-      "events" : "*"
-  },
-
-  "devDependencies": {
-    "mocha": "*"
-  },
-
-  "licenses": [
-    {
-      "type": "BSD"
-    }
-  ],
-  "bugs": {
-    "url": "https://github.com/Rillist/poker-engine/issues"
-  },
-  "directories": {
-    "example": "examples"
-  },
   "scripts": {
-    "test": "test"
+    "prepublish": "npm run build",
+    "build": "tsc && eslint --fix ./js-lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "license": "BSD"
+  "main": "js-lib/index.js",
+  "types": "js-lib/index.d.ts",
+  "dependencies": {
+    "events": "*"
+  },
+  "devDependencies": {
+    "eslint": "^4.9.0",
+    "typescript": "^2.5.3"
+  }
 }
