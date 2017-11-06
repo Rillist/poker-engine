@@ -45,6 +45,7 @@ export class Table extends events.Event {
 			player.acted = false;
 			player.allIn = false;
 			player.cards = new Array<string>();
+			player.SetHand();
 			player.prize = 0;
 		}
 
@@ -156,6 +157,9 @@ export class Table extends events.Event {
 				this.resetActedState();
 				this.game.deck.deal(3, true, (cards) => {
 					this.game.board = this.game.board.concat(cards);
+					this.forEachNonEmptyPlayer((p) => {
+						p.SetHand();
+					});
 					this.emit(
 						'flopRoundCompleted',
 						this.game.board
@@ -167,6 +171,9 @@ export class Table extends events.Event {
 				this.resetActedState();
 				this.game.deck.deal(1, true, (cards) => {
 					this.game.board = this.game.board.concat(cards);
+					this.forEachNonEmptyPlayer((p) => {
+						p.SetHand();
+					});
 					this.emit(
 						'turnRoundCompleted',
 						this.game.board
@@ -178,6 +185,9 @@ export class Table extends events.Event {
 				this.resetActedState();
 				this.game.deck.deal(1, true, (cards) => {
 					this.game.board = this.game.board.concat(cards);
+					this.forEachNonEmptyPlayer((p) => {
+						p.SetHand();
+					});
 					this.emit(
 						'riverRoundCompleted',
 						this.game.board
@@ -187,8 +197,8 @@ export class Table extends events.Event {
 				break;
 			case RoundName.Showdown:
 				this.dealMissingCards();
-				this.forEachNonEmptyPlayer((player) => {
-					player.SetHand();
+				this.forEachNonEmptyPlayer((p) => {
+					p.SetHand();
 				});
 				this.checkForWinner();
 				this.checkForBankrupt();
