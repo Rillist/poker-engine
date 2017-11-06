@@ -68,6 +68,10 @@ table.on('playerChecked', (player) => {
 	console.log('playerChecked', player.playerName);
 });
 
+table.on('playerFolded', (player) => {
+	console.log('playerFolded', player.playerName);
+});
+
 table.on('playerBankrupt', (player) => {
 	console.log('playerBankrupt', player.playerName);
 	player.chips = 1000;
