@@ -45,9 +45,7 @@ export class HandEvaluator {
 	}
 
 	static stringContainsAll(inputString: string, allChecks: string[]): boolean {
-		// tslint:disable-next-line:prefer-for-of
-		for (let i = 0; i < allChecks.length; i++) {
-			const check = allChecks[i];
+		for (const check of allChecks) {
 			if (inputString.indexOf(check) === - 1) {
 				return false;
 			}
