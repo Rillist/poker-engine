@@ -164,6 +164,34 @@ export class Player {
 		this.hand = HandEvaluator.evalHand(this.hand);
 		return this;
 	}
+
+	bet(bet: number): boolean {
+		if (!this.SimpleBet(bet)) {
+			return false;
+		}
+
+		this.acted = true;
+		this.table.progress();
+		return true;
+	}
+
+	raise(bet: number): boolean {
+		return this.bet(bet);
+	}
+
+	fold(): Player {
+		if (!this.isTurn()) {
+			return this;
+		}
+
+		this.folded = true;
+		this.acted = true;
+		this.table.emit('playerFolded',
+			this
+		);
+		this.table.progress();
+		return this;
+	}
 }
 
 export class PlayerOptions {
