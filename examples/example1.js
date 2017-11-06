@@ -1,4 +1,4 @@
-var poker = require('../index');
+var poker = require('../js-lib/index');
 var table = poker.newTable({
 	minBlind: 10,
 	maxBlind: 20,
