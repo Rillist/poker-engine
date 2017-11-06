@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "eslint": "^4.9.0",
-    "typescript": "^2.5.3"
+    "typescript": "^2.5.3",
+    "typescript.events": "^7.9.0"
   }
 }
