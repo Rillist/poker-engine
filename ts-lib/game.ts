@@ -56,6 +56,7 @@ export class Game {
 		const dealOneCardToPlayer = (p: Player) => {
 			this.deck.deal(1, false, (dealtCards) => {
 				p.cards = p.cards.concat(dealtCards);
+				p.SetHand();
 			});
 		};
 		// Deal 2 cards to each non-empty player
