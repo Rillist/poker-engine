@@ -1,1 +1,1 @@
-module.exports = require('./lib/logic');
+module.exports = require('./ts-lib/index');
