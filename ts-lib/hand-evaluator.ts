@@ -242,7 +242,7 @@ export class HandEvaluator {
 		if (this.stringContainsAll(ranks, ['222', '66'])) { hand.rank = 127; } else
 		if (this.stringContainsAll(ranks, ['222', '55'])) { hand.rank = 126; } else
 		if (this.stringContainsAll(ranks, ['222', '44'])) { hand.rank = 125; } else
-		if (this.stringContainsAll(ranks, ['222', '33'])) { hand.rank = 124; } else
+		if (this.stringContainsAll(ranks, ['222', '33'])) { hand.rank = 124; }
 		if (hand.rank !== 0) { hand.message = 'Full House'; }
 		return hand;
 	}
