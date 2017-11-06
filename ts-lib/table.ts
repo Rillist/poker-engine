@@ -408,6 +408,10 @@ export class Table extends events.Event {
 		});
 		return all;
 	}
+
+	getCurrentPlayer(): Player {
+		return this.players[this.currentPlayerIndex];
+	}
 }
 
 export class TableOptions {
