@@ -3,14 +3,13 @@
 		"target": "es5",
 		"module": "commonjs",
 		/*"declaration": true,*/
-		"outDir": "./js-lib",
+		"outDir": "./dist",
 		"strict": true,
 		"allowJs": true
 	},
 	"exclude": [
 		"node_modules",
-		"lib",
-		"js-lib",
+		"dist",
 		"examples",
 		"tests"
 	]

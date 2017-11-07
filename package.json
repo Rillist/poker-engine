@@ -23,11 +23,11 @@
   },
   "scripts": {
     "prepublish": "npm run build",
-    "build": "tsc && eslint --fix ./js-lib",
+    "build": "rmdir .\\dist /s /q && tsc && eslint --fix ./dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "main": "js-lib/index.js",
-  "types": "js-lib/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "dependencies": {
     "events": "*"
   },

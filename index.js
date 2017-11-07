@@ -1,1 +1,1 @@
-module.exports = require('./ts-lib/index');
+module.exports = require('./lib/index');
