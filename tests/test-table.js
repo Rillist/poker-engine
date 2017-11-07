@@ -1,3 +1,8 @@
-var poker = require('../js-lib/index');
+var poker = require('../dist/lib/index');
 
-module.exports = new poker.Table().startGame();
+var table = new poker.Table().startGame();
+table.reset = function(){
+	return new poker.Table().startGame();
+};
+
+module.exports = table;
