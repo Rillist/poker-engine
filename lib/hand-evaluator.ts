@@ -44,7 +44,7 @@ export class HandEvaluator {
 		return hand;
 	}
 
-	static stringContainsAll(inputString: string, allChecks: string[]): boolean {
+	static stringContainsAll(inputString: string | string[], allChecks: string[]): boolean {
 		for (const check of allChecks) {
 			if (inputString.indexOf(check) === - 1) {
 				return false;
@@ -252,17 +252,47 @@ export class HandEvaluator {
 			return hand;
 		}
 
-		if (this.stringContainsAll(ranks, ['T', 'J', 'Q', 'K', 'A'])) { hand.rank = 302; } else
-		if (this.stringContainsAll(ranks, ['9', 'T', 'J', 'Q', 'K'])) { hand.rank = 301; } else
-		if (this.stringContainsAll(ranks, ['8', '9', 'T', 'J', 'Q'])) { hand.rank = 300; } else
-		if (this.stringContainsAll(ranks, ['7', '8', '9', 'T', 'J'])) { hand.rank = 299; } else
-		if (this.stringContainsAll(ranks, ['6', '7', '8', '9', 'T'])) { hand.rank = 298; } else
-		if (this.stringContainsAll(ranks, ['5', '6', '7', '8', '9'])) { hand.rank = 297; } else
-		if (this.stringContainsAll(ranks, ['4', '5', '6', '7', '8'])) { hand.rank = 296; } else
-		if (this.stringContainsAll(ranks, ['3', '4', '5', '6', '7'])) { hand.rank = 295; } else
-		if (this.stringContainsAll(ranks, ['2', '3', '4', '5', '6'])) { hand.rank = 294; } else
-		if (this.stringContainsAll(ranks, ['A', '2', '3', '4', '5'])) { hand.rank = 293; }
-		if (hand.rank !== 0) {hand.message = 'Straight Flush'; }
+		if (this.stringContainsAll(hand.cards, ['TC', 'JC', 'QC', 'KC', 'AC'])) { hand.rank = 302; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['TD', 'JD', 'QD', 'KD', 'AD'])) { hand.rank = 302; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['TH', 'JH', 'QH', 'KH', 'AH'])) { hand.rank = 302; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['TS', 'JS', 'QS', 'KS', 'AS'])) { hand.rank = 302; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['9C', 'TC', 'JC', 'QC', 'KC'])) { hand.rank = 301; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['9D', 'TD', 'JD', 'QD', 'KD'])) { hand.rank = 301; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['9H', 'TH', 'JH', 'QH', 'KH'])) { hand.rank = 301; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['9S', 'TS', 'JS', 'QS', 'KS'])) { hand.rank = 301; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['8C', '9C', 'TC', 'JC', 'QC'])) { hand.rank = 300; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['8D', '9D', 'TD', 'JD', 'QD'])) { hand.rank = 300; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['8H', '9H', 'TH', 'JH', 'QH'])) { hand.rank = 300; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['8S', '9S', 'TS', 'JS', 'QS'])) { hand.rank = 300; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['7C', '8C', '9C', 'TC', 'JC'])) { hand.rank = 299; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['7D', '8D', '9D', 'TD', 'JD'])) { hand.rank = 299; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['7H', '8H', '9H', 'TH', 'JH'])) { hand.rank = 299; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['7S', '8S', '9S', 'TS', 'JS'])) { hand.rank = 299; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['6C', '7C', '8C', '9C', 'TC'])) { hand.rank = 298; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['6D', '7D', '8D', '9D', 'TD'])) { hand.rank = 298; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['6H', '7H', '8H', '9H', 'TH'])) { hand.rank = 298; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['6S', '7S', '8S', '9S', 'TS'])) { hand.rank = 298; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['5C', '6C', '7C', '8C', '9C'])) { hand.rank = 297; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['5D', '6D', '7D', '8D', '9D'])) { hand.rank = 297; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['5H', '6H', '7H', '8H', '9H'])) { hand.rank = 297; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['5S', '6S', '7S', '8S', '9S'])) { hand.rank = 297; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['4C', '5C', '6C', '7C', '8C'])) { hand.rank = 296; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['4D', '5D', '6D', '7D', '8D'])) { hand.rank = 296; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['4H', '5H', '6H', '7H', '8H'])) { hand.rank = 296; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['4S', '5S', '6S', '7S', '8S'])) { hand.rank = 296; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['3C', '4C', '5C', '6C', '7C'])) { hand.rank = 295; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['3D', '4D', '5D', '6D', '7D'])) { hand.rank = 295; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['3H', '4H', '5H', '6H', '7H'])) { hand.rank = 295; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['3S', '4S', '5S', '6S', '7S'])) { hand.rank = 295; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['2C', '3C', '4C', '5C', '6C'])) { hand.rank = 294; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['2D', '3D', '4D', '5D', '6D'])) { hand.rank = 294; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['2H', '3H', '4H', '5H', '6H'])) { hand.rank = 294; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['2S', '3S', '4S', '5S', '6S'])) { hand.rank = 294; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['AC', '2C', '3C', '4C', '5C'])) { hand.rank = 293; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['AS', '2S', '3S', '4S', '5S'])) { hand.rank = 293; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['AH', '2H', '3H', '4H', '5H'])) { hand.rank = 293; hand.message = 'Straight Flush'; } else
+		if (this.stringContainsAll(hand.cards, ['AD', '2D', '3D', '4D', '5D'])) { hand.rank = 293; hand.message = 'Straight Flush'; }
+		if (hand.rank === 123) { hand.rank = hand.rank + this.evalKickers(ranks, 5); }
 
 		return hand;
 	}
