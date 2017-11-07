@@ -1,6 +1,6 @@
 const { Console } = require('console');
 const console = new Console(process.stdout, process.stderr);
-var poker = require('../js-lib/index');
+var poker = require('../dist/lib/index');
 
 var table = new poker.Table();
 
