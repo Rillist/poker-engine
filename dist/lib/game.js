@@ -4,7 +4,7 @@ var defaults_1 = require('./defaults');
 var Game = /** @class */ (function () {
 	function Game(table) {
 		this.pot = 0;
-		this.round = RoundName.Deal;
+		this.round = RoundName.Preflop;
 		this.board = new Array();
 		this.bets = new Array();
 		this.roundBets = new Array();
@@ -18,7 +18,7 @@ var Game = /** @class */ (function () {
 		}
 		if (this.NonEmptyPlayerCount() >= defaults_1.MIN_PLAYERS) {
 			this.started = true;
-			this.newRound();
+			this.progressRound();
 			this.table.emit('gameStarted', this);
 			return this;
 		}
@@ -42,9 +42,6 @@ var Game = /** @class */ (function () {
 			else if (this.round === RoundName.Preflop) {
 				this.setRound(RoundName.Flop);
 			}
-			else if (this.round === RoundName.Deal) {
-				this.setRound(RoundName.Preflop);
-			}
 		}
 		else {
 			this.nextTurn();
@@ -55,7 +52,8 @@ var Game = /** @class */ (function () {
 		var _this = this;
 		this.round = round;
 		switch (round) {
-		case RoundName.Deal:
+		case RoundName.Preflop:
+			this.newRound();
 			break;
 		case RoundName.Flop:
 			this.table.resetActedState();
@@ -201,7 +199,6 @@ var Game = /** @class */ (function () {
 exports.Game = Game;
 var RoundName;
 (function (RoundName) {
-	RoundName['Deal'] = 'Deal';
 	RoundName['Preflop'] = 'Preflop';
 	RoundName['Flop'] = 'Flop';
 	RoundName['Turn'] = 'Turn';

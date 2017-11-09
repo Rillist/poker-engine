@@ -44,7 +44,7 @@ var Table = /** @class */ (function (_super) {
 	};
 	Table.prototype.initNewRound = function () {
 		this.game.pot = 0;
-		this.game.setRound(game_1.RoundName.Deal);
+		this.game.setRound(game_1.RoundName.Preflop);
 		this.game.bets = [];
 		this.game.board = [];
 		for (var _i = 0, _a = this.players; _i < _a.length; _i++) {
