@@ -34,7 +34,7 @@ export class Table extends events.Event {
 	}
 	initNewRound(): Table {
 		this.game.pot = 0;
-		this.game.setRound(RoundName.Deal);
+		this.game.setRound(RoundName.Preflop);
 
 		this.game.bets = [];
 		this.game.board = [];
