@@ -1,5 +1,6 @@
 
 import events = require('typescript.events');
+import { Deck } from './deck';
 import { BIG_BLIND, EMPTY_SEAT_NAME, MAX_PLAYERS, SMALL_BLIND } from './defaults';
 import { Game, RoundName } from './game';
 import { Player, PlayerOptions } from './player';
@@ -14,6 +15,7 @@ export class Table extends events.Event {
 	smallBlindIndex = 0;
 	bigBlindIndex = 0;
 	game: Game;
+	deck: Deck = new Deck().shuffle();
 	constructor(options: TableOptions = new TableOptions()) {
 		super();
 		this.smallBlind = options.smallBlind;
@@ -51,7 +53,7 @@ export class Table extends events.Event {
 
 		this.dealerIndex = this.getNextPlayerIndex(this.dealerIndex);
 
-		this.game.deck.shuffle();
+		this.deck.shuffle();
 		this.game.newRound();
 
 		return this;
@@ -155,7 +157,7 @@ export class Table extends events.Event {
 				break;
 			case RoundName.Flop:
 				this.resetActedState();
-				this.game.deck.deal(3, true, (cards) => {
+				this.deck.deal(3, true, (cards) => {
 					this.game.board = this.game.board.concat(cards);
 					this.forEachNonEmptyPlayer((p) => {
 						p.SetHand();
@@ -169,7 +171,7 @@ export class Table extends events.Event {
 				break;
 			case RoundName.Turn:
 				this.resetActedState();
-				this.game.deck.deal(1, true, (cards) => {
+				this.deck.deal(1, true, (cards) => {
 					this.game.board = this.game.board.concat(cards);
 					this.forEachNonEmptyPlayer((p) => {
 						p.SetHand();
@@ -183,7 +185,7 @@ export class Table extends events.Event {
 				break;
 			case RoundName.River:
 				this.resetActedState();
-				this.game.deck.deal(1, true, (cards) => {
+				this.deck.deal(1, true, (cards) => {
 					this.game.board = this.game.board.concat(cards);
 					this.forEachNonEmptyPlayer((p) => {
 						p.SetHand();
@@ -349,19 +351,19 @@ export class Table extends events.Event {
 		const missingCards = 5 - this.game.board.length;
 		if (missingCards >= 3) {
 			// flop 3 cards with a burn
-			this.game.deck.deal(3, true, (cards) => {
+			this.deck.deal(3, true, (cards) => {
 				this.game.board = this.game.board.concat(cards);
 			});
 		}
 		if (missingCards >= 2) {
 			// turn 1 card with a burn
-			this.game.deck.deal(1, true, (cards) => {
+			this.deck.deal(1, true, (cards) => {
 				this.game.board = this.game.board.concat(cards);
 			});
 		}
 		if (missingCards >= 1) {
 			// river 1 card with a burn
-			this.game.deck.deal(1, true, (cards) => {
+			this.deck.deal(1, true, (cards) => {
 				this.game.board = this.game.board.concat(cards);
 			});
 		}

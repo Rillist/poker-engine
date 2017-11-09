@@ -1,4 +1,3 @@
-import { Deck } from './deck';
 import { BIG_BLIND, MIN_PLAYERS, SMALL_BLIND } from './defaults';
 import { Player } from './player';
 import { Table } from './table';
@@ -6,7 +5,6 @@ import { Table } from './table';
 export class Game {
 	pot = 0;
 	round: RoundName = RoundName.Deal;
-	deck: Deck = new Deck().shuffle();
 	board: string[] = new Array<string>();
 	bets: number[] = new Array<number>();
 	roundBets: number[] = new Array<number>();
@@ -32,7 +30,7 @@ export class Game {
 		return this;
 	}
 	newRound(): Game {
-		this.deck.shuffle();
+		this.table.deck.shuffle();
 		return this.resetBets()
 			.assignBlinds()
 			.payBlinds()
@@ -54,7 +52,7 @@ export class Game {
 	dealCards(): Game {
 		// Deal 1 card at a time, 2 off the top is not correct
 		const dealOneCardToPlayer = (p: Player) => {
-			this.deck.deal(1, false, (dealtCards) => {
+			this.table.deck.deal(1, false, (dealtCards) => {
 				p.cards = p.cards.concat(dealtCards);
 				p.SetHand();
 			});

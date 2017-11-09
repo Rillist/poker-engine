@@ -11,6 +11,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, '__esModule', { value: true });
 var events = require('typescript.events');
+var deck_1 = require('./deck');
 var defaults_1 = require('./defaults');
 var game_1 = require('./game');
 var player_1 = require('./player');
@@ -25,6 +26,7 @@ var Table = /** @class */ (function (_super) {
 		_this.dealerIndex = 0;
 		_this.smallBlindIndex = 0;
 		_this.bigBlindIndex = 0;
+		_this.deck = new deck_1.Deck().shuffle();
 		_this.smallBlind = options.smallBlind;
 		_this.bigBlind = options.bigBlind;
 		_this.players = options.players || new Array();
@@ -59,7 +61,7 @@ var Table = /** @class */ (function (_super) {
 			player.prize = 0;
 		}
 		this.dealerIndex = this.getNextPlayerIndex(this.dealerIndex);
-		this.game.deck.shuffle();
+		this.deck.shuffle();
 		this.game.newRound();
 		return this;
 	};
@@ -161,7 +163,7 @@ var Table = /** @class */ (function (_super) {
 			break;
 		case game_1.RoundName.Flop:
 			this.resetActedState();
-			this.game.deck.deal(3, true, function (cards) {
+			this.deck.deal(3, true, function (cards) {
 				_this.game.board = _this.game.board.concat(cards);
 				_this.forEachNonEmptyPlayer(function (p) {
 					p.SetHand();
@@ -172,7 +174,7 @@ var Table = /** @class */ (function (_super) {
 			break;
 		case game_1.RoundName.Turn:
 			this.resetActedState();
-			this.game.deck.deal(1, true, function (cards) {
+			this.deck.deal(1, true, function (cards) {
 				_this.game.board = _this.game.board.concat(cards);
 				_this.forEachNonEmptyPlayer(function (p) {
 					p.SetHand();
@@ -183,7 +185,7 @@ var Table = /** @class */ (function (_super) {
 			break;
 		case game_1.RoundName.River:
 			this.resetActedState();
-			this.game.deck.deal(1, true, function (cards) {
+			this.deck.deal(1, true, function (cards) {
 				_this.game.board = _this.game.board.concat(cards);
 				_this.forEachNonEmptyPlayer(function (p) {
 					p.SetHand();
@@ -331,19 +333,19 @@ var Table = /** @class */ (function (_super) {
 		var missingCards = 5 - this.game.board.length;
 		if (missingCards >= 3) {
 			// flop 3 cards with a burn
-			this.game.deck.deal(3, true, function (cards) {
+			this.deck.deal(3, true, function (cards) {
 				_this.game.board = _this.game.board.concat(cards);
 			});
 		}
 		if (missingCards >= 2) {
 			// turn 1 card with a burn
-			this.game.deck.deal(1, true, function (cards) {
+			this.deck.deal(1, true, function (cards) {
 				_this.game.board = _this.game.board.concat(cards);
 			});
 		}
 		if (missingCards >= 1) {
 			// river 1 card with a burn
-			this.game.deck.deal(1, true, function (cards) {
+			this.deck.deal(1, true, function (cards) {
 				_this.game.board = _this.game.board.concat(cards);
 			});
 		}

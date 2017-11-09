@@ -1,12 +1,10 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-var deck_1 = require('./deck');
 var defaults_1 = require('./defaults');
 var Game = /** @class */ (function () {
 	function Game(table) {
 		this.pot = 0;
 		this.round = RoundName.Deal;
-		this.deck = new deck_1.Deck().shuffle();
 		this.board = new Array();
 		this.bets = new Array();
 		this.roundBets = new Array();
@@ -31,7 +29,7 @@ var Game = /** @class */ (function () {
 		return this;
 	};
 	Game.prototype.newRound = function () {
-		this.deck.shuffle();
+		this.table.deck.shuffle();
 		return this.resetBets()
 			.assignBlinds()
 			.payBlinds()
@@ -48,7 +46,7 @@ var Game = /** @class */ (function () {
 		var _this = this;
 		// Deal 1 card at a time, 2 off the top is not correct
 		var dealOneCardToPlayer = function (p) {
-			_this.deck.deal(1, false, function (dealtCards) {
+			_this.table.deck.deal(1, false, function (dealtCards) {
 				p.cards = p.cards.concat(dealtCards);
 				p.SetHand();
 			});
