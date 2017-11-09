@@ -18,7 +18,7 @@ export class Game {
 			this.table.emit('startFailed', 'already started');
 			return this;
 		}
-		if (this.NonEmptyPlayerCount() >= MIN_PLAYERS) {
+		if (this.table.NonEmptyPlayerCount >= MIN_PLAYERS) {
 			this.started = true;
 			this.progressRound();
 			this.table.emit('gameStarted', this);
@@ -112,7 +112,9 @@ export class Game {
 	}
 
 	newRound(): Game {
-		this.table.deck.shuffle();
+		this.table.resetPlayerHands()
+			.deck.shuffle();
+
 		return this.resetBets()
 			.assignBlinds()
 			.payBlinds()
@@ -144,12 +146,11 @@ export class Game {
 	resetBets(): Game {
 		this.bets = new Array<number>(this.table.players.length);
 		this.roundBets = new Array<number>(this.table.players.length);
-
 		return this;
 	}
 
 	assignBlinds(): Game {
-		if (this.NonEmptyPlayerCount() > 2) {
+		if (this.table.NonEmptyPlayerCount > 2) {
 			this.table.smallBlindIndex = this.table.getNextPlayerIndex(this.table.dealerIndex);
 		} else {
 			this.table.smallBlindIndex = this.table.dealerIndex;
@@ -192,17 +193,6 @@ export class Game {
 		);
 		// END REFACTOR
 		return this;
-	}
-
-	NonEmptyPlayerCount(): number {
-		let totalActivePlayers = 0;
-		if (!this.table)	{
-			return totalActivePlayers;
-		}
-		this.table.forEachNonEmptyPlayer(() => {
-			totalActivePlayers++;
-		});
-		return totalActivePlayers;
 	}
 
 	SetBet(playerIndex: number, betAmount: number): Game {

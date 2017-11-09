@@ -299,6 +299,21 @@ export class Table extends events.Event {
 		return this;
 	}
 
+	resetPlayerHands(): Table {
+		this.forEachNonEmptyPlayer((player) => {
+			player.cards = new Array<string>();
+		});
+		return this;
+	}
+
+	public get NonEmptyPlayerCount(): number {
+		let totalActivePlayers = 0;
+		this.forEachNonEmptyPlayer(() => {
+			totalActivePlayers++;
+		});
+		return totalActivePlayers;
+	}
+
 	dealToPlayers(count: number, burn = false): Table {
 		// one card at a time
 		const dealOneCardToPlayer = (p: Player) => {
