@@ -34,7 +34,7 @@ export class Table extends events.Event {
 	}
 	initNewRound(): Table {
 		this.game.pot = 0;
-		this.setStep(RoundName.Deal);
+		this.game.setRound(RoundName.Deal);
 
 		this.game.bets = [];
 		this.game.board = [];
@@ -125,88 +125,6 @@ export class Table extends events.Event {
 		this.players[position] = player;
 		this.emit('addedPlayer', player, position);
 
-		return this;
-	}
-
-	progress(): Table {
-		if (this.allPlayersTalked()) {
-			this.moveBetsToPot();
-			if (this.allActivePlayersAreAllIn() || this.game.round === RoundName.River) {
-				this.setStep(RoundName.Showdown);
-			} else if (this.game.round === RoundName.Turn) {
-				this.setStep(RoundName.River);
-			} else if (this.game.round === RoundName.Flop) {
-				this.setStep(RoundName.Turn);
-			} else if (this.game.round === RoundName.Deal) {
-				this.setStep(RoundName.Flop);
-			}
-		} else {
-			this.game.nextTurn();
-		}
-		return this;
-	}
-
-	setStep(round: RoundName): Table {
-		this.game.round = round;
-		switch (round) {
-			case RoundName.Deal:
-				break;
-			case RoundName.Flop:
-				this.resetActedState();
-				this.deck.deal(3, true, (cards) => {
-					this.game.board = this.game.board.concat(cards);
-					this.forEachNonEmptyPlayer((p) => {
-						p.SetHand();
-					});
-					this.emit(
-						'flopRoundCompleted',
-						this.game.board
-					);
-					this.setNextTurnToSmallBlind();
-				});
-				break;
-			case RoundName.Turn:
-				this.resetActedState();
-				this.deck.deal(1, true, (cards) => {
-					this.game.board = this.game.board.concat(cards);
-					this.forEachNonEmptyPlayer((p) => {
-						p.SetHand();
-					});
-					this.emit(
-						'turnRoundCompleted',
-						this.game.board
-					);
-					this.setNextTurnToSmallBlind();
-				});
-				break;
-			case RoundName.River:
-				this.resetActedState();
-				this.deck.deal(1, true, (cards) => {
-					this.game.board = this.game.board.concat(cards);
-					this.forEachNonEmptyPlayer((p) => {
-						p.SetHand();
-					});
-					this.emit(
-						'riverRoundCompleted',
-						this.game.board
-					);
-					this.setNextTurnToSmallBlind();
-				});
-				break;
-			case RoundName.Showdown:
-				this.dealMissingCards();
-				this.forEachNonEmptyPlayer((p) => {
-					p.SetHand();
-				});
-				this.checkForWinner();
-				this.checkForBankrupt();
-				setImmediate(() => {
-					this.emit('gameOver');
-				});
-				break;
-			default:
-				break;
-		}
 		return this;
 	}
 

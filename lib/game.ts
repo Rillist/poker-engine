@@ -13,7 +13,7 @@ export class Game {
 	constructor(table: Table) {
 		this.table = table;
 	}
-	start(): Game {
+	public start(): Game {
 		if (this.started) {
 			this.table.emit('startFailed', 'already started');
 			return this;
@@ -28,6 +28,90 @@ export class Game {
 		}
 		return this;
 	}
+	public progressRound(): Game {
+		if (this.table.allPlayersTalked()) {
+			this.table.moveBetsToPot();
+			if (this.table.allActivePlayersAreAllIn() || this.round === RoundName.River) {
+				this.setRound(RoundName.Showdown);
+			} else if (this.round === RoundName.Turn) {
+				this.setRound(RoundName.River);
+			} else if (this.round === RoundName.Flop) {
+				this.setRound(RoundName.Turn);
+			} else if (this.round === RoundName.Preflop) {
+				this.setRound(RoundName.Flop);
+			} else if (this.round === RoundName.Deal) {
+				this.setRound(RoundName.Preflop);
+			}
+		} else {
+			this.nextTurn();
+		}
+		return this;
+	}
+
+	setRound(round: RoundName): Game {
+		this.round = round;
+		switch (round) {
+			case RoundName.Deal:
+				break;
+			case RoundName.Flop:
+				this.table.resetActedState();
+				this.table.deck.deal(3, true, (cards) => {
+					this.board = this.board.concat(cards);
+					this.table.forEachNonEmptyPlayer((p) => {
+						p.SetHand();
+					});
+					this.table.emit(
+						'flopRoundCompleted',
+						this.board
+					);
+					this.table.setNextTurnToSmallBlind();
+				});
+				break;
+			case RoundName.Turn:
+				this.table.resetActedState();
+				this.table.deck.deal(1, true, (cards) => {
+					this.board = this.board.concat(cards);
+					this.table.forEachNonEmptyPlayer((p) => {
+						p.SetHand();
+					});
+					this.table.emit(
+						'turnRoundCompleted',
+						this.board
+					);
+					this.table.setNextTurnToSmallBlind();
+				});
+				break;
+			case RoundName.River:
+				this.table.resetActedState();
+				this.table.deck.deal(1, true, (cards) => {
+					this.board = this.board.concat(cards);
+					this.table.forEachNonEmptyPlayer((p) => {
+						p.SetHand();
+					});
+					this.table.emit(
+						'riverRoundCompleted',
+						this.board
+					);
+					this.table.setNextTurnToSmallBlind();
+				});
+				break;
+			case RoundName.Showdown:
+				this.table.dealMissingCards();
+				this.table.forEachNonEmptyPlayer((p) => {
+					p.SetHand();
+				});
+				this.table.checkForWinner();
+				this.table.checkForBankrupt();
+				setImmediate(() => {
+					this.table.emit('gameOver');
+				});
+				break;
+			default:
+				break;
+		}
+		return this;
+	}
+
 	newRound(): Game {
 		this.table.deck.shuffle();
 		return this.resetBets()
@@ -151,6 +235,7 @@ export class Game {
 
 export enum RoundName {
 	Deal = 'Deal',
+	Preflop = 'Preflop',
 	Flop = 'Flop',
 	Turn = 'Turn',
 	River = 'River',
