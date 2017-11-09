@@ -1,5 +1,3 @@
-import events = require('typescript.events');
-
 const unshuffled_deck: string[] = [
 	'AS', 'KS', 'QS', 'JS', 'TS', '9S', '8S', '7S', '6S', '5S', '4S', '3S', '2S',
 	'AH', 'KH', 'QH', 'JH',	'TH', '9H', '8H', '7H', '6H', '5H', '4H', '3H', '2H',
@@ -7,7 +5,7 @@ const unshuffled_deck: string[] = [
 	'AC', 'KC', 'QC', 'JC', 'TC', '9C', '8C', '7C', '6C', '5C', '4C', '3C', '2C'
 ];
 
-export class Deck extends events.Event {
+export class Deck {
 	cards: string[] = unshuffled_deck;
 	shuffle(): Deck {// Shuffle the deck array with Fisher-Yates
 		this.cards = unshuffled_deck.slice();
@@ -36,7 +34,6 @@ export class Deck extends events.Event {
 		 	dealtCards.push(this.cards.pop() || 'undefined');
 		}
 
-		this.emit('dealtCards', dealtCards, count, burn, this);
 		if (cb) { cb(dealtCards); }
 
 		return this;
