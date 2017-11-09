@@ -7,6 +7,7 @@ var TestPlayer2 = { playerName: 'Player 2' };
 var TestPlayer3 = { playerName: 'Player 3' };
 
 // GIVEN
+TestTable.game.started = true;
 TestTable.game.round = 'River';
 TestTable.game.board = ['7S', 'KS', 'KH', 'AH', 'QD'];
 TestTable.addPlayer(TestPlayer1).addPlayer(TestPlayer2);
@@ -15,7 +16,7 @@ TestTable.players[1].cards = ['AS', 'QS'];
 TestTable.players[0].acted = true;
 TestTable.players[1].acted = true;
 // WHEN
-TestTable.progress();
+TestTable.game.progressRound();
 // THEN
 console.assert(TestTable.players[0].hand.message === 'Full House', 'Expected Full House, got:', TestTable.players[0].hand.message);
 console.assert(TestTable.players[1].hand.message === 'Two Pair', 'Expected Two Pair, got:', TestTable.players[1].hand.message);
@@ -23,6 +24,7 @@ console.assert(TestTable.players[1].hand.message === 'Two Pair', 'Expected Two P
 
 TestTable = TestTable.reset();
 // GIVEN
+TestTable.game.started = true;
 TestTable.game.round = 'River';
 TestTable.game.board = ['3H', '4H', '5H', '6S', '7S'];
 TestTable.addPlayer(TestPlayer1).addPlayer(TestPlayer2).addPlayer(TestPlayer3);
@@ -46,4 +48,4 @@ TestTable.on('prizeWon', (player, amount) => {
 	console.assert(asserted, 'prizeWon', player.playerName, amount, player.hand.message, player.hand.cards);
 });
 // WHEN
-TestTable.progress();
+TestTable.game.progressRound();

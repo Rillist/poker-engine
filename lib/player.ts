@@ -123,7 +123,7 @@ export class Player {
 		}
 
 		this.acted = true;
-		this.table.progress();
+		this.table.game.progressRound();
 		return true;
 	}
 
@@ -140,7 +140,7 @@ export class Player {
 			this
 		);
 		this.acted = true;
-		this.table.progress();
+		this.table.game.progressRound();
 		return true;
 	}
 
@@ -171,7 +171,7 @@ export class Player {
 		}
 
 		this.acted = true;
-		this.table.progress();
+		this.table.game.progressRound();
 		return true;
 	}
 
@@ -189,7 +189,7 @@ export class Player {
 		this.table.emit('playerFolded',
 			this
 		);
-		this.table.progress();
+		this.table.game.progressRound();
 		return this;
 	}
 }
