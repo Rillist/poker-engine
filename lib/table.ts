@@ -22,6 +22,7 @@ export class Table extends events.Event {
 		this.bigBlind = options.bigBlind;
 		this.players = options.players || new Array<Player>();
 		this.maxPlayers = options.maxPlayers;
+		this.game = new Game(this);
 	}
 	forEachNonEmptyPlayer(fn: (p: Player, i: number, arr: Player[]) => any): Table {
 		for (let i = 0; i < this.players.length; i++) {
@@ -29,11 +30,6 @@ export class Table extends events.Event {
 				fn(this.players[i], i, this.players);
 			}
 		}
-		return this;
-	}
-	startGame(): Table {
-		this.game = new Game(this);
-		this.game.start();
 		return this;
 	}
 	initNewRound(): Table {
