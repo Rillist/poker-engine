@@ -149,4 +149,4 @@ table.addPlayer({
 	chips: 300
 });
 
-table.startGame();
+table.game.start();
