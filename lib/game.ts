@@ -19,11 +19,10 @@ export class Game {
 			return this;
 		}
 		if (this.NonEmptyPlayerCount() >= MIN_PLAYERS) {
-			this.table.fixEmptySeats();
-			this.table.dealerIndex = 0;
 			this.started = true;
+			this.newRound();
 			this.table.emit('gameStarted', this);
-			return this.newRound();
+			return this;
 		} else {
 			this.table.emit('startFailed', 'not enough players');
 		}
