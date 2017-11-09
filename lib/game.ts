@@ -116,7 +116,7 @@ export class Game {
 		return this.resetBets()
 			.assignBlinds()
 			.payBlinds()
-			.dealCards()
+			.dealHoleCards()
 			.nextTurn();
 	}
 
@@ -131,19 +131,8 @@ export class Game {
 		return this;
 	}
 
-	dealCards(): Game {
-		// Deal 1 card at a time, 2 off the top is not correct
-		const dealOneCardToPlayer = (p: Player) => {
-			this.table.deck.deal(1, false, (dealtCards) => {
-				p.cards = p.cards.concat(dealtCards);
-				p.SetHand();
-			});
-		};
-		// Deal 2 cards to each non-empty player
-		this.table
-			.forEachNonEmptyPlayer(dealOneCardToPlayer)
-			.forEachNonEmptyPlayer(dealOneCardToPlayer);
-
+	dealHoleCards(): Game {
+		this.table.dealToPlayers(2);
 		this.table.emit(
 			'dealRoundCompleted',
 			this.table.players[this.table.dealerIndex],
