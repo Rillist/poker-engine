@@ -31,6 +31,7 @@ var Table = /** @class */ (function (_super) {
 		_this.bigBlind = options.bigBlind;
 		_this.players = options.players || new Array();
 		_this.maxPlayers = options.maxPlayers;
+		_this.game = new game_1.Game(_this);
 		return _this;
 	}
 	Table.prototype.forEachNonEmptyPlayer = function (fn) {
@@ -41,14 +42,9 @@ var Table = /** @class */ (function (_super) {
 		}
 		return this;
 	};
-	Table.prototype.startGame = function () {
-		this.game = new game_1.Game(this);
-		this.game.start();
-		return this;
-	};
 	Table.prototype.initNewRound = function () {
 		this.game.pot = 0;
-		this.setStep(game_1.RoundName.Deal);
+		this.game.setRound(game_1.RoundName.Deal);
 		this.game.bets = [];
 		this.game.board = [];
 		for (var _i = 0, _a = this.players; _i < _a.length; _i++) {
@@ -132,82 +128,6 @@ var Table = /** @class */ (function (_super) {
 		player.table = this;
 		this.players[position] = player;
 		this.emit('addedPlayer', player, position);
-		return this;
-	};
-	Table.prototype.progress = function () {
-		if (this.allPlayersTalked()) {
-			this.moveBetsToPot();
-			if (this.allActivePlayersAreAllIn() || this.game.round === game_1.RoundName.River) {
-				this.setStep(game_1.RoundName.Showdown);
-			}
-			else if (this.game.round === game_1.RoundName.Turn) {
-				this.setStep(game_1.RoundName.River);
-			}
-			else if (this.game.round === game_1.RoundName.Flop) {
-				this.setStep(game_1.RoundName.Turn);
-			}
-			else if (this.game.round === game_1.RoundName.Deal) {
-				this.setStep(game_1.RoundName.Flop);
-			}
-		}
-		else {
-			this.game.nextTurn();
-		}
-		return this;
-	};
-	Table.prototype.setStep = function (round) {
-		var _this = this;
-		this.game.round = round;
-		switch (round) {
-		case game_1.RoundName.Deal:
-			break;
-		case game_1.RoundName.Flop:
-			this.resetActedState();
-			this.deck.deal(3, true, function (cards) {
-				_this.game.board = _this.game.board.concat(cards);
-				_this.forEachNonEmptyPlayer(function (p) {
-					p.SetHand();
-				});
-				_this.emit('flopRoundCompleted', _this.game.board);
-				_this.setNextTurnToSmallBlind();
-			});
-			break;
-		case game_1.RoundName.Turn:
-			this.resetActedState();
-			this.deck.deal(1, true, function (cards) {
-				_this.game.board = _this.game.board.concat(cards);
-				_this.forEachNonEmptyPlayer(function (p) {
-					p.SetHand();
-				});
-				_this.emit('turnRoundCompleted', _this.game.board);
-				_this.setNextTurnToSmallBlind();
-			});
-			break;
-		case game_1.RoundName.River:
-			this.resetActedState();
-			this.deck.deal(1, true, function (cards) {
-				_this.game.board = _this.game.board.concat(cards);
-				_this.forEachNonEmptyPlayer(function (p) {
-					p.SetHand();
-				});
-				_this.emit('riverRoundCompleted', _this.game.board);
-				_this.setNextTurnToSmallBlind();
-			});
-			break;
-		case game_1.RoundName.Showdown:
-			this.dealMissingCards();
-			this.forEachNonEmptyPlayer(function (p) {
-				p.SetHand();
-			});
-			this.checkForWinner();
-			this.checkForBankrupt();
-			setImmediate(function () {
-				_this.emit('gameOver');
-			});
-			break;
-		default:
-			break;
-		}
 		return this;
 	};
 	Table.prototype.checkForBankrupt = function () {

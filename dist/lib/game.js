@@ -17,14 +17,92 @@ var Game = /** @class */ (function () {
 			return this;
 		}
 		if (this.NonEmptyPlayerCount() >= defaults_1.MIN_PLAYERS) {
-			this.table.fixEmptySeats();
-			this.table.dealerIndex = 0;
 			this.started = true;
+			this.newRound();
 			this.table.emit('gameStarted', this);
-			return this.newRound();
+			return this;
 		}
 		else {
 			this.table.emit('startFailed', 'not enough players');
+		}
+		return this;
+	};
+	Game.prototype.progressRound = function () {
+		if (this.table.allPlayersTalked()) {
+			this.table.moveBetsToPot();
+			if (this.table.allActivePlayersAreAllIn() || this.round === RoundName.River) {
+				this.setRound(RoundName.Showdown);
+			}
+			else if (this.round === RoundName.Turn) {
+				this.setRound(RoundName.River);
+			}
+			else if (this.round === RoundName.Flop) {
+				this.setRound(RoundName.Turn);
+			}
+			else if (this.round === RoundName.Preflop) {
+				this.setRound(RoundName.Flop);
+			}
+			else if (this.round === RoundName.Deal) {
+				this.setRound(RoundName.Preflop);
+			}
+		}
+		else {
+			this.nextTurn();
+		}
+		return this;
+	};
+	Game.prototype.setRound = function (round) {
+		var _this = this;
+		this.round = round;
+		switch (round) {
+		case RoundName.Deal:
+			break;
+		case RoundName.Flop:
+			this.table.resetActedState();
+			this.table.deck.deal(3, true, function (cards) {
+				_this.board = _this.board.concat(cards);
+				_this.table.forEachNonEmptyPlayer(function (p) {
+					p.SetHand();
+				});
+				_this.table.emit('flopRoundCompleted', _this.board);
+				_this.table.setNextTurnToSmallBlind();
+			});
+			break;
+		case RoundName.Turn:
+			this.table.resetActedState();
+			this.table.deck.deal(1, true, function (cards) {
+				_this.board = _this.board.concat(cards);
+				_this.table.forEachNonEmptyPlayer(function (p) {
+					p.SetHand();
+				});
+				_this.table.emit('turnRoundCompleted', _this.board);
+				_this.table.setNextTurnToSmallBlind();
+			});
+			break;
+		case RoundName.River:
+			this.table.resetActedState();
+			this.table.deck.deal(1, true, function (cards) {
+				_this.board = _this.board.concat(cards);
+				_this.table.forEachNonEmptyPlayer(function (p) {
+					p.SetHand();
+				});
+				_this.table.emit('riverRoundCompleted', _this.board);
+				_this.table.setNextTurnToSmallBlind();
+			});
+			break;
+		case RoundName.Showdown:
+			this.table.dealMissingCards();
+			this.table.forEachNonEmptyPlayer(function (p) {
+				p.SetHand();
+			});
+			this.table.checkForWinner();
+			this.table.checkForBankrupt();
+			setImmediate(function () {
+				_this.table.emit('gameOver');
+			});
+			break;
+		default:
+			break;
 		}
 		return this;
 	};
@@ -124,6 +202,7 @@ exports.Game = Game;
 var RoundName;
 (function (RoundName) {
 	RoundName['Deal'] = 'Deal';
+	RoundName['Preflop'] = 'Preflop';
 	RoundName['Flop'] = 'Flop';
 	RoundName['Turn'] = 'Turn';
 	RoundName['River'] = 'River';

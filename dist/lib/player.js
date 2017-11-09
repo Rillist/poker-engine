@@ -99,7 +99,7 @@ var Player = /** @class */ (function () {
 			return false;
 		}
 		this.acted = true;
-		this.table.progress();
+		this.table.game.progressRound();
 		return true;
 	};
 	Player.prototype.check = function () {
@@ -113,7 +113,7 @@ var Player = /** @class */ (function () {
 		}
 		this.table.emit('playerChecked', this);
 		this.acted = true;
-		this.table.progress();
+		this.table.game.progressRound();
 		return true;
 	};
 	Player.prototype.getIndex = function () {
@@ -139,7 +139,7 @@ var Player = /** @class */ (function () {
 			return false;
 		}
 		this.acted = true;
-		this.table.progress();
+		this.table.game.progressRound();
 		return true;
 	};
 	Player.prototype.raise = function (bet) {
@@ -152,7 +152,7 @@ var Player = /** @class */ (function () {
 		this.folded = true;
 		this.acted = true;
 		this.table.emit('playerFolded', this);
-		this.table.progress();
+		this.table.game.progressRound();
 		return this;
 	};
 	return Player;
