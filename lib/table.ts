@@ -339,7 +339,7 @@ export class Table extends events.Event {
 		return this;
 	}
 
-	allPlayersTalked(): boolean {
+	public get allPlayersTalked(): boolean {
 		let endOfRound = true;
 		let i = 0;
 		// todo: seems like something like lodash can do this simpler
@@ -355,7 +355,7 @@ export class Table extends events.Event {
 		return endOfRound;
 	}
 
-	allActivePlayersAreAllIn(): boolean {
+	public get allActivePlayersAreAllIn(): boolean {
 		let all = true;
 		this.forEachNonEmptyPlayer((player) => {
 			if (!player.allIn && !player.folded) {

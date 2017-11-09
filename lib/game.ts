@@ -29,9 +29,9 @@ export class Game {
 		return this;
 	}
 	public progressRound(): Game {
-		if (this.table.allPlayersTalked()) {
+		if (this.table.allPlayersTalked) {
 			this.table.moveBetsToPot();
-			if (this.table.allActivePlayersAreAllIn() || this.round === RoundName.River) {
+			if (this.table.allActivePlayersAreAllIn || this.round === RoundName.River) {
 				this.setRound(RoundName.Showdown);
 			} else if (this.round === RoundName.Turn) {
 				this.setRound(RoundName.River);
