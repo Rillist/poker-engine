@@ -20,7 +20,7 @@ export class Player {
 		}
 		return nonSeatedPlayer;
 	}
-	constructor(options?: {playerName: string, chips: number})
+	constructor(options?: {playerName?: string, chips?: number})
 	constructor(options: PlayerOptions = new PlayerOptions()) {
 		this.playerName = options && options.playerName ? options.playerName : EMPTY_SEAT_NAME;
 		this.chips = options && options.chips ? options.chips : 0;
