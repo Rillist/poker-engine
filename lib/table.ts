@@ -277,17 +277,15 @@ export class Table extends events.Event {
 	}
 
 	resetActedState(): Table {
-		this.forEachNonEmptyPlayer((player) => {
+		return this.forEachNonEmptyPlayer((player) => {
 			player.acted = false;
 		});
-		return this;
 	}
 
 	resetPlayerHands(): Table {
-		this.forEachNonEmptyPlayer((player) => {
+		return this.forEachNonEmptyPlayer((player) => {
 			player.cards = new Array<string>();
 		});
-		return this;
 	}
 
 	public get NonEmptyPlayerCount(): number {
