@@ -23,14 +23,14 @@ export class Game {
 			this.pot = 0;
 			this.round = RoundName.Deal;
 			this.table.forEachNonEmptyPlayer((player) => {
-				player.acted = true;
+				player.acted = false;
 				player.folded = false;
 				player.allIn = false;
 				player.prize = 0;
 				player.SetHand();
 			});
-			this.progressRound();
 			this.table.emit('gameStarted', this);
+			this.newRound();
 			return this;
 		} else {
 			this.table.emit('startFailed', 'not enough players');
@@ -46,7 +46,7 @@ export class Game {
 				this.setRound(RoundName.River);
 			} else if (this.round === RoundName.Flop) {
 				this.setRound(RoundName.Turn);
-			} else if (this.round === RoundName.Preflop) {
+			} else if (this.round === RoundName.Deal) {
 				this.setRound(RoundName.Flop);
 			}
 		} else {
@@ -58,50 +58,50 @@ export class Game {
 	setRound(round: RoundName): Game {
 		this.round = round;
 		switch (round) {
-			case RoundName.Preflop:
+			case RoundName.Deal:
 				this.newRound();
 				break;
 			case RoundName.Flop:
 				this.table.resetActedState();
-				this.table.deck.deal(3, true, (cards) => {
+				this.table.deck.deal(this.board, 3, true/*, (cards) => {
 					this.board = this.board.concat(cards);
-					this.table.forEachNonEmptyPlayer((p) => {
-						p.SetHand();
-					});
-					this.table.emit(
-						'flopRoundCompleted',
-						this.board
-					);
-					this.table.setNextTurnToSmallBlind();
+				}*/);
+				this.table.forEachNonEmptyPlayer((p) => {
+					p.SetHand();
 				});
+				this.table.emit(
+					'flopRoundCompleted',
+					this.board
+				);
+				this.table.setNextTurnToSmallBlind();
 				break;
 			case RoundName.Turn:
 				this.table.resetActedState();
-				this.table.deck.deal(1, true, (cards) => {
+				this.table.deck.deal(this.board, 1, true/*, (cards) => {
 					this.board = this.board.concat(cards);
-					this.table.forEachNonEmptyPlayer((p) => {
-						p.SetHand();
-					});
-					this.table.emit(
-						'turnRoundCompleted',
-						this.board
-					);
-					this.table.setNextTurnToSmallBlind();
+				}*/);
+				this.table.forEachNonEmptyPlayer((p) => {
+					p.SetHand();
 				});
+				this.table.emit(
+					'turnRoundCompleted',
+					this.board
+				);
+				this.table.setNextTurnToSmallBlind();
 				break;
 			case RoundName.River:
 				this.table.resetActedState();
-				this.table.deck.deal(1, true, (cards) => {
+				this.table.deck.deal(this.board, 1, true/*, (cards) => {
 					this.board = this.board.concat(cards);
-					this.table.forEachNonEmptyPlayer((p) => {
-						p.SetHand();
-					});
-					this.table.emit(
-						'riverRoundCompleted',
-						this.board
-					);
-					this.table.setNextTurnToSmallBlind();
+				}*/);
+				this.table.forEachNonEmptyPlayer((p) => {
+					p.SetHand();
 				});
+				this.table.emit(
+					'riverRoundCompleted',
+					this.board
+				);
+				this.table.setNextTurnToSmallBlind();
 				break;
 			case RoundName.Showdown:
 				this.table.dealMissingCards();
@@ -111,6 +111,7 @@ export class Game {
 				this.table.checkForWinner();
 				this.table.checkForBankrupt();
 				setImmediate(() => {
+					this.started = false;
 					this.table.emit('gameOver');
 				});
 				break;
@@ -121,14 +122,13 @@ export class Game {
 	}
 
 	newRound(): Game {
-		this.table.resetPlayerHands()
-			.deck.shuffle();
-
-		return this.resetBets()
+		this.resetCardsOnTable()
+			.resetBets()
 			.assignBlinds()
 			.payBlinds()
 			.dealHoleCards()
 			.nextTurn();
+		return this;
 	}
 
 	nextTurn(): Game {
@@ -143,7 +143,18 @@ export class Game {
 	}
 
 	dealHoleCards(): Game {
-		this.table.dealToPlayers(2);
+		// Deal 1 card at a time, 2 off the top is not correct
+		const dealOneCardToPlayer = (p: Player) => {
+			this.table.deck.deal(p.cards, 1, false/*, (dealtCards) => {
+				p.cards = p.cards.concat(dealtCards);
+			}*/);
+			p.SetHand();
+		};
+		// Deal 2 cards to each non-empty player
+		this.table
+			.forEachNonEmptyPlayer(dealOneCardToPlayer)
+			.forEachNonEmptyPlayer(dealOneCardToPlayer);
+
 		this.table.emit(
 			'dealRoundCompleted',
 			this.table.players[this.table.dealerIndex],
@@ -155,6 +166,13 @@ export class Game {
 	resetBets(): Game {
 		this.bets = new Array<number>(this.table.players.length);
 		this.roundBets = new Array<number>(this.table.players.length);
+		return this;
+	}
+
+	resetCardsOnTable(): Game {
+		this.table.resetPlayerHands()
+			.deck.shuffle();
+		this.board = new Array<string>();
 		return this;
 	}
 
