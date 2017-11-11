@@ -4,7 +4,7 @@ import { Table } from './table';
 
 export class Game {
 	pot = 0;
-	round: RoundName = RoundName.Preflop;
+	round: RoundName = RoundName.Deal;
 	board: string[] = new Array<string>();
 	bets: number[] = new Array<number>();
 	roundBets: number[] = new Array<number>();
@@ -20,6 +20,15 @@ export class Game {
 		}
 		if (this.table.NonEmptyPlayerCount >= MIN_PLAYERS) {
 			this.started = true;
+			this.pot = 0;
+			this.round = RoundName.Deal;
+			this.table.forEachNonEmptyPlayer((player) => {
+				player.acted = true;
+				player.folded = false;
+				player.allIn = false;
+				player.prize = 0;
+				player.SetHand();
+			});
 			this.progressRound();
 			this.table.emit('gameStarted', this);
 			return this;
@@ -212,7 +221,7 @@ export class Game {
 }
 
 export enum RoundName {
-	Preflop = 'Preflop',
+	Deal = 'Deal',
 	Flop = 'Flop',
 	Turn = 'Turn',
 	River = 'River',

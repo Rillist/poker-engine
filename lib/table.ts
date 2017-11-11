@@ -33,24 +33,8 @@ export class Table extends events.Event {
 		return this;
 	}
 	initNewRound(): Table {
-		this.game.pot = 0;
-		this.game.setRound(RoundName.Preflop);
-
-		this.game.bets = [];
-		this.game.board = [];
-		for (const player of this.players) {
-			player.folded = false;
-			player.acted = false;
-			player.allIn = false;
-			player.cards = new Array<string>();
-			player.SetHand();
-			player.prize = 0;
-		}
-
 		this.dealerIndex = this.getNextPlayerIndex(this.dealerIndex);
-
-		this.deck.shuffle();
-		this.game.newRound();
+		this.game.start();
 
 		return this;
 	}
