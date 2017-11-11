@@ -4,7 +4,7 @@ var defaults_1 = require('./defaults');
 var Game = /** @class */ (function () {
 	function Game(table) {
 		this.pot = 0;
-		this.round = RoundName.Preflop;
+		this.round = RoundName.Deal;
 		this.board = new Array();
 		this.bets = new Array();
 		this.roundBets = new Array();
@@ -16,10 +16,19 @@ var Game = /** @class */ (function () {
 			this.table.emit('startFailed', 'already started');
 			return this;
 		}
-		if (this.NonEmptyPlayerCount() >= defaults_1.MIN_PLAYERS) {
+		if (this.table.NonEmptyPlayerCount >= defaults_1.MIN_PLAYERS) {
 			this.started = true;
-			this.progressRound();
+			this.pot = 0;
+			this.round = RoundName.Deal;
+			this.table.forEachNonEmptyPlayer(function (player) {
+				player.acted = false;
+				player.folded = false;
+				player.allIn = false;
+				player.prize = 0;
+				player.SetHand();
+			});
 			this.table.emit('gameStarted', this);
+			this.newRound();
 			return this;
 		}
 		else {
@@ -28,9 +37,9 @@ var Game = /** @class */ (function () {
 		return this;
 	};
 	Game.prototype.progressRound = function () {
-		if (this.table.allPlayersTalked()) {
+		if (this.table.allPlayersTalked) {
 			this.table.moveBetsToPot();
-			if (this.table.allActivePlayersAreAllIn() || this.round === RoundName.River) {
+			if (this.table.allActivePlayersAreAllIn || this.round === RoundName.River) {
 				this.setRound(RoundName.Showdown);
 			}
 			else if (this.round === RoundName.Turn) {
@@ -39,7 +48,7 @@ var Game = /** @class */ (function () {
 			else if (this.round === RoundName.Flop) {
 				this.setRound(RoundName.Turn);
 			}
-			else if (this.round === RoundName.Preflop) {
+			else if (this.round === RoundName.Deal) {
 				this.setRound(RoundName.Flop);
 			}
 		}
@@ -52,41 +61,41 @@ var Game = /** @class */ (function () {
 		var _this = this;
 		this.round = round;
 		switch (round) {
-		case RoundName.Preflop:
+		case RoundName.Deal:
 			this.newRound();
 			break;
 		case RoundName.Flop:
 			this.table.resetActedState();
-			this.table.deck.deal(3, true, function (cards) {
-				_this.board = _this.board.concat(cards);
-				_this.table.forEachNonEmptyPlayer(function (p) {
-					p.SetHand();
-				});
-				_this.table.emit('flopRoundCompleted', _this.board);
-				_this.table.setNextTurnToSmallBlind();
+			this.table.deck.deal(this.board, 3, true /*, (cards) => {
+                    this.board = this.board.concat(cards);
+                }*/);
+			this.table.forEachNonEmptyPlayer(function (p) {
+				p.SetHand();
 			});
+			this.table.emit('flopRoundCompleted', this.board);
+			this.table.setNextTurnToSmallBlind();
 			break;
 		case RoundName.Turn:
 			this.table.resetActedState();
-			this.table.deck.deal(1, true, function (cards) {
-				_this.board = _this.board.concat(cards);
-				_this.table.forEachNonEmptyPlayer(function (p) {
-					p.SetHand();
-				});
-				_this.table.emit('turnRoundCompleted', _this.board);
-				_this.table.setNextTurnToSmallBlind();
+			this.table.deck.deal(this.board, 1, true /*, (cards) => {
+                    this.board = this.board.concat(cards);
+                }*/);
+			this.table.forEachNonEmptyPlayer(function (p) {
+				p.SetHand();
 			});
+			this.table.emit('turnRoundCompleted', this.board);
+			this.table.setNextTurnToSmallBlind();
 			break;
 		case RoundName.River:
 			this.table.resetActedState();
-			this.table.deck.deal(1, true, function (cards) {
-				_this.board = _this.board.concat(cards);
-				_this.table.forEachNonEmptyPlayer(function (p) {
-					p.SetHand();
-				});
-				_this.table.emit('riverRoundCompleted', _this.board);
-				_this.table.setNextTurnToSmallBlind();
+			this.table.deck.deal(this.board, 1, true /*, (cards) => {
+                    this.board = this.board.concat(cards);
+                }*/);
+			this.table.forEachNonEmptyPlayer(function (p) {
+				p.SetHand();
 			});
+			this.table.emit('riverRoundCompleted', this.board);
+			this.table.setNextTurnToSmallBlind();
 			break;
 		case RoundName.Showdown:
 			this.table.dealMissingCards();
@@ -96,6 +105,7 @@ var Game = /** @class */ (function () {
 			this.table.checkForWinner();
 			this.table.checkForBankrupt();
 			setImmediate(function () {
+				_this.started = false;
 				_this.table.emit('gameOver');
 			});
 			break;
@@ -105,12 +115,13 @@ var Game = /** @class */ (function () {
 		return this;
 	};
 	Game.prototype.newRound = function () {
-		this.table.deck.shuffle();
-		return this.resetBets()
+		this.resetCardsOnTable()
+			.resetBets()
 			.assignBlinds()
 			.payBlinds()
-			.dealCards()
+			.dealHoleCards()
 			.nextTurn();
+		return this;
 	};
 	Game.prototype.nextTurn = function () {
 		this.table.currentPlayerIndex = this.table.getNextPlayerIndex(this.table.currentPlayerIndex, true);
@@ -118,14 +129,14 @@ var Game = /** @class */ (function () {
 		this.table.emit('nextTurn', this.table.players[this.table.currentPlayerIndex]);
 		return this;
 	};
-	Game.prototype.dealCards = function () {
+	Game.prototype.dealHoleCards = function () {
 		var _this = this;
 		// Deal 1 card at a time, 2 off the top is not correct
 		var dealOneCardToPlayer = function (p) {
-			_this.table.deck.deal(1, false, function (dealtCards) {
-				p.cards = p.cards.concat(dealtCards);
-				p.SetHand();
-			});
+			_this.table.deck.deal(p.cards, 1, false /*, (dealtCards) => {
+                p.cards = p.cards.concat(dealtCards);
+            }*/);
+			p.SetHand();
 		};
 		// Deal 2 cards to each non-empty player
 		this.table
@@ -139,8 +150,14 @@ var Game = /** @class */ (function () {
 		this.roundBets = new Array(this.table.players.length);
 		return this;
 	};
+	Game.prototype.resetCardsOnTable = function () {
+		this.table.resetPlayerHands()
+			.deck.shuffle();
+		this.board = new Array();
+		return this;
+	};
 	Game.prototype.assignBlinds = function () {
-		if (this.NonEmptyPlayerCount() > 2) {
+		if (this.table.NonEmptyPlayerCount > 2) {
 			this.table.smallBlindIndex = this.table.getNextPlayerIndex(this.table.dealerIndex);
 		}
 		else {
@@ -170,16 +187,6 @@ var Game = /** @class */ (function () {
 		// END REFACTOR
 		return this;
 	};
-	Game.prototype.NonEmptyPlayerCount = function () {
-		var totalActivePlayers = 0;
-		if (!this.table) {
-			return totalActivePlayers;
-		}
-		this.table.forEachNonEmptyPlayer(function () {
-			totalActivePlayers++;
-		});
-		return totalActivePlayers;
-	};
 	Game.prototype.SetBet = function (playerIndex, betAmount) {
 		for (var i = 0; i <= playerIndex; i++) {
 			this.bets[i] = this.bets[i] || 0;
@@ -199,7 +206,7 @@ var Game = /** @class */ (function () {
 exports.Game = Game;
 var RoundName;
 (function (RoundName) {
-	RoundName['Preflop'] = 'Preflop';
+	RoundName['Deal'] = 'Deal';
 	RoundName['Flop'] = 'Flop';
 	RoundName['Turn'] = 'Turn';
 	RoundName['River'] = 'River';

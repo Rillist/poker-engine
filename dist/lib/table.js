@@ -43,22 +43,8 @@ var Table = /** @class */ (function (_super) {
 		return this;
 	};
 	Table.prototype.initNewRound = function () {
-		this.game.pot = 0;
-		this.game.setRound(game_1.RoundName.Preflop);
-		this.game.bets = [];
-		this.game.board = [];
-		for (var _i = 0, _a = this.players; _i < _a.length; _i++) {
-			var player = _a[_i];
-			player.folded = false;
-			player.acted = false;
-			player.allIn = false;
-			player.cards = new Array();
-			player.SetHand();
-			player.prize = 0;
-		}
 		this.dealerIndex = this.getNextPlayerIndex(this.dealerIndex);
-		this.deck.shuffle();
-		this.game.newRound();
+		this.game.start();
 		return this;
 	};
 	Table.prototype.fixEmptySeats = function () {
@@ -249,25 +235,24 @@ var Table = /** @class */ (function (_super) {
 		return roundEnd;
 	};
 	Table.prototype.dealMissingCards = function () {
-		var _this = this;
 		var missingCards = 5 - this.game.board.length;
 		if (missingCards >= 3) {
 			// flop 3 cards with a burn
-			this.deck.deal(3, true, function (cards) {
-				_this.game.board = _this.game.board.concat(cards);
-			});
+			this.deck.deal(this.game.board, 3, true /*, (cards) => {
+                this.game.board = this.game.board.concat(cards);
+            }*/);
 		}
 		if (missingCards >= 2) {
 			// turn 1 card with a burn
-			this.deck.deal(1, true, function (cards) {
-				_this.game.board = _this.game.board.concat(cards);
-			});
+			this.deck.deal(this.game.board, 1, true /*, (cards) => {
+                this.game.board = this.game.board.concat(cards);
+            }*/);
 		}
 		if (missingCards >= 1) {
 			// river 1 card with a burn
-			this.deck.deal(1, true, function (cards) {
-				_this.game.board = _this.game.board.concat(cards);
-			});
+			this.deck.deal(this.game.board, 1, true /*, (cards) => {
+                this.game.board = this.game.board.concat(cards);
+            }*/);
 		}
 		return this;
 	};
@@ -279,10 +264,50 @@ var Table = /** @class */ (function (_super) {
 		return this;
 	};
 	Table.prototype.resetActedState = function () {
-		this.forEachNonEmptyPlayer(function (player) {
+		return this.forEachNonEmptyPlayer(function (player) {
 			player.acted = false;
 		});
+	};
+	Table.prototype.resetPlayerHands = function () {
+		return this.forEachNonEmptyPlayer(function (player) {
+			player.cards = new Array();
+		});
+	};
+	Object.defineProperty(Table.prototype, 'NonEmptyPlayerCount', {
+		get: function () {
+			var totalActivePlayers = 0;
+			this.forEachNonEmptyPlayer(function () {
+				totalActivePlayers++;
+			});
+			return totalActivePlayers;
+		},
+		enumerable: true,
+		configurable: true
+	});
+	Table.prototype.dealToPlayers = function (count, burn) {
+		var _this = this;
+		if (burn === void 0) { burn = false; }
+		// one card at a time
+		var dealOneCardToPlayer = function (p) {
+			_this.deck.deal(p.cards, 1, burn /*, (dealtCards) => {
+                p.cards = p.cards.concat(dealtCards);
+            }*/);
+			p.SetHand();
+		};
+		// around the table
+		for (var i = 0; i < count; i++) {
+			this.forEachNonEmptyPlayer(dealOneCardToPlayer);
+		}
 		return this;
+	};
+	Table.prototype.dealToBoard = function (count, burn) {
+		if (burn === void 0) { burn = true; }
+		this.deck.deal(this.game.board, count, burn /*, (cards) => {
+            this.game.board = this.game.board.concat(cards);
+        }*/);
+		return this.forEachNonEmptyPlayer(function (p) {
+			p.SetHand();
+		});
 	};
 	Table.prototype.moveBetsToPot = function () {
 		for (var i = 0; i < this.game.bets.length; i++) {
@@ -293,31 +318,39 @@ var Table = /** @class */ (function (_super) {
 		}
 		return this;
 	};
-	Table.prototype.allPlayersTalked = function () {
-		var endOfRound = true;
-		var i = 0;
-		// todo: seems like something like lodash can do this simpler
-		// maybe port a method like any, or add dependency?
-		// return players.any(!empty, !acted, !folded, !allIn)
-		while (endOfRound && i < this.players.length) {
-			if (!this.players[i].empty() && !this.players[i].acted && !this.players[i].folded && !this.players[i].allIn) {
-				endOfRound = false;
+	Object.defineProperty(Table.prototype, 'allPlayersTalked', {
+		get: function () {
+			var endOfRound = true;
+			var i = 0;
+			// todo: seems like something like lodash can do this simpler
+			// maybe port a method like any, or add dependency?
+			// return players.any(!empty, !acted, !folded, !allIn)
+			while (endOfRound && i < this.players.length) {
+				if (!this.players[i].empty() && !this.players[i].acted && !this.players[i].folded && !this.players[i].allIn) {
+					endOfRound = false;
+				}
+				else {
+					i++;
+				}
 			}
-			else {
-				i++;
-			}
-		}
-		return endOfRound;
-	};
-	Table.prototype.allActivePlayersAreAllIn = function () {
-		var all = true;
-		this.forEachNonEmptyPlayer(function (player) {
-			if (!player.allIn && !player.folded) {
-				all = false;
-			}
-		});
-		return all;
-	};
+			return endOfRound;
+		},
+		enumerable: true,
+		configurable: true
+	});
+	Object.defineProperty(Table.prototype, 'allActivePlayersAreAllIn', {
+		get: function () {
+			var all = true;
+			this.forEachNonEmptyPlayer(function (player) {
+				if (!player.allIn && !player.folded) {
+					all = false;
+				}
+			});
+			return all;
+		},
+		enumerable: true,
+		configurable: true
+	});
 	Table.prototype.getCurrentPlayer = function () {
 		return this.players[this.currentPlayerIndex];
 	};

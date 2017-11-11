@@ -45,6 +45,10 @@ var Player = /** @class */ (function () {
 			return false;
 		}
 		this.table.game.SetBet(index, protectedBet);
+		//for (let i = 0; i <= index; i++) {
+		//	this.table.game.bets[i] = this.table.game.bets[i] || 0;
+		//}
+		//this.table.game.bets[index] = this.table.game.bets[index] + protectedBet;
 		this.table.players[index].chips = this.table.players[index].chips - protectedBet;
 		this.acted = true;
 		if (this.table.players[index].chips <= 0) {

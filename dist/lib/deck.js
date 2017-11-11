@@ -32,21 +32,19 @@ var Deck = /** @class */ (function () {
 		}
 		return this;
 	};
-	Deck.prototype.deal = function (count, burn, cb) {
+	Deck.prototype.deal = function (target, count, burn /*, cb: (dealtCards: string[]) => any*/) {
 		if (count === void 0) { count = 1; }
-		if (burn === void 0) { burn = false; }
+		if (burn === void 0) { burn = false; } /*, cb: (dealtCards: string[]) => any*/
 		if (burn) {
 			this.burn();
 		}
-		var dealtCards = new Array();
+		// const dealtCards = new Array<string>();
 		for (var i = 1; i <= count && i <= this.cards.length; i++) {
 			// dumb hack, can't push undefined but can pop it...
 			// cards.length check prevents this anyway.
-			dealtCards.push(this.cards.pop() || 'undefined');
+			target.push(this.cards.pop() || 'undefined');
 		}
-		if (cb) {
-			cb(dealtCards);
-		}
+		// if (cb) { cb(dealtCards); }
 		return this;
 	};
 	return Deck;
