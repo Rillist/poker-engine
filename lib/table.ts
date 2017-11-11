@@ -265,21 +265,21 @@ export class Table extends events.Event {
 		const missingCards = 5 - this.game.board.length;
 		if (missingCards >= 3) {
 			// flop 3 cards with a burn
-			this.deck.deal(3, true, (cards) => {
+			this.deck.deal(this.game.board, 3, true/*, (cards) => {
 				this.game.board = this.game.board.concat(cards);
-			});
+			}*/);
 		}
 		if (missingCards >= 2) {
 			// turn 1 card with a burn
-			this.deck.deal(1, true, (cards) => {
+			this.deck.deal(this.game.board, 1, true/*, (cards) => {
 				this.game.board = this.game.board.concat(cards);
-			});
+			}*/);
 		}
 		if (missingCards >= 1) {
 			// river 1 card with a burn
-			this.deck.deal(1, true, (cards) => {
+			this.deck.deal(this.game.board, 1, true/*, (cards) => {
 				this.game.board = this.game.board.concat(cards);
-			});
+			}*/);
 		}
 		return this;
 	}
@@ -317,10 +317,11 @@ export class Table extends events.Event {
 	dealToPlayers(count: number, burn = false): Table {
 		// one card at a time
 		const dealOneCardToPlayer = (p: Player) => {
-			this.deck.deal(1, burn, (dealtCards) => {
+			this.deck.deal(p.cards, 1, burn/*, (dealtCards) => {
 				p.cards = p.cards.concat(dealtCards);
 				p.SetHand();
-			});
+			}*/);
+			p.SetHand();
 		};
 		// around the table
 		for (let i = 0; i < count; i++) {
