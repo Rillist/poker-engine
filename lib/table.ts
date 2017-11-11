@@ -330,6 +330,16 @@ export class Table extends events.Event {
 		return this;
 	}
 
+	dealToBoard(count: number, burn = true): Table {
+		this.deck.deal(this.game.board, count, burn/*, (cards) => {
+			this.game.board = this.game.board.concat(cards);
+		}*/);
+
+		return this.forEachNonEmptyPlayer((p) => {
+			p.SetHand();
+		});
+	}
+
 	moveBetsToPot(): Table {
 		for (let i = 0; i < this.game.bets.length; i++) {
 			const bet = Math.round(this.game.bets[i]);
