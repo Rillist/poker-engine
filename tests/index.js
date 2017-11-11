@@ -8,7 +8,7 @@ var TestPlayer3 = { playerName: 'Player 3' };
 
 // GIVEN
 TestTable.game.started = true;
-TestTable.game.round = 'River';
+TestTable.game.round = 'Showdown';
 TestTable.game.board = ['7S', 'KS', 'KH', 'AH', 'QD'];
 TestTable.addPlayer(TestPlayer1).addPlayer(TestPlayer2);
 TestTable.players[0].cards = ['7H', '7D'];
@@ -25,7 +25,7 @@ console.assert(TestTable.players[1].hand.message === 'Two Pair', 'Expected Two P
 TestTable = TestTable.reset();
 // GIVEN
 TestTable.game.started = true;
-TestTable.game.round = 'River';
+TestTable.game.round = 'Showdown';
 TestTable.game.board = ['3H', '4H', '5H', '6S', '7S'];
 TestTable.addPlayer(TestPlayer1).addPlayer(TestPlayer2).addPlayer(TestPlayer3);
 TestTable.players[0].cards = ['AH', '2H']; // Straight Flush
