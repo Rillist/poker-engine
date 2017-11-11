@@ -20,8 +20,8 @@ table.on('gameStarted', (game) => {
 	console.log('gameStarted', game.round);
 });
 
-table.on('dealRoundCompleted', (dealer, game) => {
-	console.log('dealRoundCompleted', dealer.playerName, game.round);
+table.on('dealRoundCompleted', (dealer) => {
+	console.log('dealRoundCompleted', dealer.playerName);
 });
 
 table.on('flopRoundCompleted', (board) => {
@@ -95,6 +95,7 @@ table.on('prizeWon', (player, amount) => {
 });
 
 var gamecount = 0;
+var maxGamecount = 105;
 table.on('gameOver', () => {
 	console.log('gameOver', table.game.board);
 	table.forEachNonEmptyPlayer((p) => {
@@ -102,7 +103,9 @@ table.on('gameOver', () => {
 	});
 	gamecount++;
 	console.log('gamecount:', gamecount);
-	table.initNewRound();
+	if (gamecount < maxGamecount) {
+		table.initNewRound();
+	}
 });
 
 table.on('wrongTurn', (msg) => {
@@ -147,6 +150,10 @@ table.addPlayer(
 table.addPlayer({
 	playerName: 'schmoe',
 	chips: 300
+});
+
+table.on('error', (err) => {
+	console.error('whoops! there was an error', err);
 });
 
 table.game.start();
