@@ -25,17 +25,16 @@ export class Deck {
 		}
 		return this;
 	}
-	deal(count = 1, burn = false, cb: (dealtCards: string[]) => any): Deck {
+	deal(target: string[], count = 1, burn = false/*, cb: (dealtCards: string[]) => any*/): Deck {
 		if (burn) { this.burn(); }
-		const dealtCards = new Array<string>();
+		// const dealtCards = new Array<string>();
 		for (let i = 1; i <= count && i <= this.cards.length; i++) {
 			// dumb hack, can't push undefined but can pop it...
 			// cards.length check prevents this anyway.
-		 	dealtCards.push(this.cards.pop() || 'undefined');
+		 	target.push(this.cards.pop() || 'undefined');
 		}
 
-		if (cb) { cb(dealtCards); }
-
+		// if (cb) { cb(dealtCards); }
 		return this;
 	}
 }
